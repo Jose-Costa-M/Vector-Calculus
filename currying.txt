@@ -1,0 +1,101 @@
+Aquí ejemplificamos como se realizo el cálculo lambda(Currying).
+
+
+-- DEFINIMOS LAS OPERACIONES BASE
+
+add :: Float -> Float -> Float
+--CURRYING
+--add x y = x + y 
+--add x = (\y -> x + y)
+add = (\x y -> x + y)
+
+sub :: Float -> Float -> Float
+--Currying
+--sub x y = x - y //SIN CURRYING
+--sub x = \y -> x- y
+sub = (\x y -> x - y)
+
+mult :: Float -> Float -> Float
+--CURRYING
+--multiplicacion x y = x * y //SIN CURRYING
+--multiplicacion x = (\y -> x * y)
+mult = (\x y -> x*y)
+
+magnituddos :: (Float -> Float) -> (Float -> Float -> Float) -> (Float, Float) -> Float
+-- CURRYING
+-- magnituddos f g (x1 ,x2) = f( (g x1 x1 + g x2 x2) )
+--magnituddos f g = (\(x1 ,x2) -> f( (g x1 x1 + g x2 x2) ) )
+-- magnituddos f = (\g ->\(x1 ,x2) -> f( (g x1 x1 + g x2 x2) ) ))
+--magintuddos = (\f ->(\g ->\(x1 ,x2) -> f( (g x1 x1 + g x2 x2) ) )) )
+magnituddos = (\f g (x1,x2) -> f( (g x1 x1 + g x2 x2) )) 
+
+
+--VECTORES EN R2 
+
+--SUMA Y RESTA FUNCIONES DE ORDEN SUPERIOR Y CURRYING
+vectordos :: ( Float -> Float -> Float) -> (Float, Float) -> (Float, Float) -> (Float, Float)
+--ORDEN SUPERIOR CON CURRYING
+--vectordos f (x1,x2) (y1,y2) = (f x1 y1, f x2 y2) // Sin CURRYING
+--vectordos f (x1,x2) = (\(y1,y2)->(f x1 y1, f x2 y2))
+--vectordos f = (\(x1,x2)->(\(y1,y2)->(f x1 y1, f x2 y2)))
+--vectordos = (\f->(\(x1,x2)->(\(y1,y2)->(f x1 y1, f x2 y2))))
+vectordos = (\f (x1,x2) (y1,y2)->(f x1 y1, f x2 y2))
+--NOTA: VECTORDOS FUNCIONA PARA LA SUMA, sub
+
+-- PRODUCTO POR UN ESCALAR FUNCIONES DE ORDEN SUPERIOR Y CURRYING . f = multi
+-- /*Funcion que recibe una función, un flotantante y una tupla y retorna una tupla  */
+p_escalar_dos :: (Float -> Float -> Float)-> Float -> (Float, Float) -> (Float, Float)
+-- p_escalar_dos f w (x1,x2) = (f w x1, f w x2) //Sin CURRYING
+-- p_escalar_dos f w = (\(x1,x2) ->(f w x1, f w x2))
+-- p_escalar_dos f  = (\w -> (\(x1,x2) ->(f w x1, f w x2)) )
+p_escalar_dos = (\f w (x1,x2) ->(f w x1, f w x2))
+
+--multvecescalardos  w (x1,x2) = (multiplicacion  w x1 , multiplicacion w x2)
+
+-- PRODUCTO PUNTO ENTRE 2 VECTORES R2 F.O.S Y CURRYING f = mult
+-- /*Entra una función, 2 tuplas y retorna un flotante */
+p_punto_dos :: (Float -> Float -> Float) -> (Float, Float) -> (Float, Float) -> Float
+-- productopuntodos  f (x1,x2) (y1,y2) = f x1 y1 + f x2 y2 // Sin CURRYING
+-- productopuntodos  f (x1,x2) = (\(y1,y2) -> f x1 y1 + f x2 y2 )
+-- productopuntodos f = (\(x1,x2) ->(\(y1,y2) -> f x1 y1 + f x2 y2 ) )
+p_punto_dos = (\f (x1,x2)(y1,y2) -> f x1 y1 + f x2 y2 ) 
+
+p_vec_dos :: (Float -> Float -> Float) -> (Float,Float) -> (Float, Float) -> (Float,Float,Float)
+--p_vec_dos  f (x1,x2) (y1,y2) = (0 ,0 ,(f x1 y2) - (f x2 y1)) //Sin CURRYING
+-- p_vec_dos f (x1,x2) = (\(y1,y2) -> (0,0,f x1 y2 - f x2 y1))
+-- p_vec_dos f = (\(x1,x2) ->(\(y1,y2) -> (0,0,f x1 y2 - f x2 y1)))
+p_vec_dos = (\f (x1,x2)(y1,y2) -> (0 ,0 ,f x1 y2 - f x2 y1)) 
+
+
+---VECTORES EN R3
+
+vector_tres ::( Float -> Float -> Float) -> (Float, Float, Float) -> (Float, Float, Float) -> (Float, Float, Float)
+-- vector_tres f (x1,x2,x3) (y1,y2,y3) = (f x1 y1, f x2 y2, f x3 y3) //sin CURRYING
+-- vector_tres f (x1,x2,x3) = (\(y1,y2,y3) -> (f x1 y1, f x2 y2, f x3 y3))
+-- vector_tres f = (\(x1,x2,x3) -> (\(y1,y2,y3) -> (f x1 y1, f x2 y2, f x3 y3)))
+-- vector_tres = (\f ->  (\(x1,x2,x3) -> (\(y1,y2,y3) -> (f x1 y1, f x2 y2, f x3 y3))))
+vector_tres = (\f (x1,x2,x3) (y1,y2,y3) ->(f x1 y1, f x2 y2, f x3 y3)  )
+
+p_escalar_tres ::(Float -> Float -> Float)-> Float -> (Float, Float,Float) -> (Float, Float, Float)
+--p_escalar_tres f w (x1,x2,x3) = (f w x1, f w x2, f w x3 )
+--p_escalar_tres f w = (\(x1,x2,x3) -> (f w x1, f w x2, f w x3 ))
+--p_escalar_tres f = (\w -> (\(x1,x2,x3) -> (f w x1, f w x2, f w x3 )))
+--p_escalar_tres = (\f -> (\w -> (\(x1,x2,x3) -> (f w x1, f w x2, f w x3 ))))
+p_escalar_tres = (\f w (x1,x2,x3) ->(f w x1, f w x2, f w x3))
+
+p_punto_tres :: (Float -> Float -> Float) -> (Float, Float,Float) -> (Float, Float,Float) -> Float
+--p_punto_tres f (x1,x2,x3)(y1,y2,y3) = f x1 y1 + f x2 y2 + f x3 y3
+--p_punto_tres f (x1,x2,x3) = (\(y1,y2,y3) -> f x1 y1 + f x2 y2 + f x3 y3)
+--p_punto_tres f = (\(x1,x2,x3) -> (\(y1,y2,y3) -> f x1 y1 + f x2 y2 + f x3 y3) )
+--p_punto_tres = (\f -> (\(x1,x2,x3) -> (\(y1,y2,y3) -> f x1 y1 + f x2 y2 + f x3 y3) ))
+p_punto_tres = (\f (x1,x2,x3)(y1,y2,y3) -> f x1 y1 + f x2 y2 + f x3 y3  )
+
+
+-- TRIPLE PRODUCTO VECTORIAL DE LA FORMA AX(BXC)
+tvp ::( Float -> Float -> Float)->(Float, Float, Float) -> (Float, Float, Float) -> (Float, Float, Float) -> (Float, Float, Float)
+--tpv f (x1,x2,x3) (y1,y2,y3) (z1,z2,z3) =( p_vec_tres f (x1,x2,x3) ( p_vec_tres f (y1,y2,y3) (z1,z2,z3) ) )
+-- tvp f (x1,x2,x3) (y1,y2,y3) = (\(z1,z2,z3) ->( p_vec_tres f (x1,x2,x3) ( p_vec_tres f (y1,y2,y3) (z1,z2,z3) ) ) )
+-- tvp f (x1,x2,x3) = (\(y1,y2,y3 ->  (\(z1,z2,z3) ->( p_vec_tres f (x1,x2,x3) ( p_vec_tres f (y1,y2,y3) (z1,z2,z3) ) ) ))
+-- tvp f = (\(x1,x2,x3) ->(\(y1,y2,y3 ->  (\(z1,z2,z3) ->( p_vec_tres f (x1,x2,x3) ( p_vec_tres f (y1,y2,y3) (z1,z2,z3) ) ) )))
+-- tvp = (\f ->(\(x1,x2,x3) ->(\(y1,y2,y3 ->  (\(z1,z2,z3) ->( p_vec_tres f (x1,x2,x3) ( p_vec_tres f (y1,y2,y3) (z1,z2,z3) ) ) ))) )
+tvp = (\f (x1,x2,x3) (y1,y2,y3) (z1,z2,z3) ->( p_vec_tres f (x1,x2,x3) ( p_vec_tres f (y1,y2,y3) (z1,z2,z3) ) ) )
