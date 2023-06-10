@@ -1,4 +1,4 @@
-# Vector-Calculus
+# Vector Calculus
 Project made in haskell.
 
 USO: Para poder correr el programa necesitas tener el interprete GHCI, una vez instalado tienes que guardar el archivo en una carpeta, cargar los modulos ( :l practica.hs ) y ejecutar la funcion " instructions "  :).
